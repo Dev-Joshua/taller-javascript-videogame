@@ -9,35 +9,7 @@ let elementsSize;
 window.addEventListener("load", setCanvasSize);
 window.addEventListener("resize", setCanvasSize);
 
-//Funcion para renderizar el mapa y el jugador
-function startGame() {
-  console.log({ canvasSize, elementsSize });
-
-  //Inserto un emoji[x] en la posicion 100, 100
-  game.font = elementsSize + "px Verdana";
-  game.textAlign = "end";
-  console.log(game);
-  console.log(elementsSize);
-
-  for (let i = 1; i <= 10; i++) {
-    //En cada iteracion renderizamos filtext
-    game.fillText(emojis["X"], elementsSize * i, elementsSize);
-  }
-  /*canvas.setAttribute("width", window.innerWidth * 0.75);
-  canvas.setAttribute("height", window.innerHeight * 0.5);
-  window.innerHeight;
-  window.innerWidth;
-  game.fillRect(0, 50, 100, 100);
-  game.clearRect(50, 50, 50, 50);
-  game.clearRect(0,0,50,50)
-
-  game.font = "14px Verdana";
-  game.fillStyle = "purple";
-  game.textAlign = "start";
-  game.fillText("VideoGame", 10, 30);*/
-}
-
-//Esta funcion se encarga de hacer el resize(ajustar el canvas para tamaño desktop y mobile)
+//Funcion q se encarga de hacer el resize(ajustar el canvas para tamaño desktop y mobile)
 function setCanvasSize() {
   //Pregunto si la altura es mayor que el ancho(width). Aqui se define el canvasSize
   if (window.innerHeight > window.innerWidth) {
@@ -57,6 +29,43 @@ function setCanvasSize() {
 
   //Una vez se defina el canvas llamo la funcion
   startGame();
+}
+
+//Funcion para renderizar el mapa  y el jugador con fillText x toda la grilla
+function startGame() {
+  console.log({ canvasSize, elementsSize });
+
+  //Inserto un emoji[x]
+  game.font = elementsSize + "px Verdana";
+  game.textAlign = "end";
+
+  const map = maps[2];
+  //Creo un array(donde el inicio y el final de c/elemento es cuando haya un salto de linea ), selecciono el mapa[0] le quito los espacios en blanco .trim() y
+  const mapRows = map.trim().split("\n");
+  const mapRowCols = mapRows.map((row) => row.trim().split(""));
+  console.log({ map, mapRows, mapRowCols });
+
+  //Con un ciclo anidado agregamos los emoji a cada elementSize(filas[i] y columnas[j]) de la grilla. => Map[row["col"]]
+  for (let i = 1; i <= 10; i++) {
+    // console.log(i);
+    for (let j = 1; j <= 10; j++) {
+      //En cada iteracion renderizamos filtext
+      // game.fillText(emojis["X"], elementsSize * i, elementsSize * j);
+      // console.log(j);
+      // game.fillText(mapRowCols[i][j], elementsSize * i, elementsSize * j);
+      //Le enviamos el mapRowCols al objeto de emojis para que tome el elemento que concuerde con estas ubicaciones(i,j-> row,col)
+      game.fillText(
+        emojis[mapRowCols[i - 1][j - 1]],
+        elementsSize * i,
+        elementsSize * j
+      );
+    }
+  }
+  /*
+  game.font = "14px Verdana";
+  game.fillStyle = "purple";
+  game.textAlign = "start";
+  game.fillText("VideoGame", 10, 30);*/
 }
 
 //Cada vez que quiera moverme en el canvas de izquierda a derecha sera el eje x, para movernos de arriba hacia abajo sera en el eje y
