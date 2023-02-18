@@ -1,6 +1,10 @@
 const canvas = document.querySelector("#game");
 // //Para acceder a los metodos y dibujar sobre el canvas guardo en la variable game el contexto 2D del juego
 const game = canvas.getContext("2d");
+const btnUp = document.querySelector("#up");
+const btnLeft = document.querySelector("#left");
+const btnRight = document.querySelector("#right");
+const btnDown = document.querySelector("#down");
 
 let canvasSize;
 let elementsSize;
@@ -59,7 +63,7 @@ function startGame() {
       game.fillText(emoji, posX, posY);
       // console.log(emojis[col]);
       // console.log({ row, col });
-      console.log({ row, rowI, col, colI });
+      // console.log({ row, rowI, col, colI });
     });
   });
 
@@ -84,6 +88,51 @@ function startGame() {
   game.fillStyle = "purple";
   game.textAlign = "start";
   game.fillText("VideoGame", 10, 30);*/
+}
+
+window.addEventListener("keydown", moveByKeys);
+btnUp.addEventListener("click", moveUp);
+btnLeft.addEventListener("click", moveLeft);
+btnRight.addEventListener("click", moveRight);
+btnDown.addEventListener("click", moveDown);
+
+function moveByKeys(event) {
+  console.log(event);
+  switch (event.key) {
+    case "ArrowUp":
+      moveUp();
+      break;
+    case "ArrowLeft":
+      moveLeft();
+      break;
+    case "ArrowRight":
+      moveRight();
+      break;
+    case "ArrowDown":
+      moveDown();
+      break;
+  }
+  // if (event.key == "ArrowUp") {
+  //   moveUp();
+  // } else if (event.key == "ArrowLeft") {
+  //   moveLeft();
+  // } else if (event.key == "ArrowRight") {
+  //   moveRight();
+  // } else if (event.key == "ArrowDown") {
+  //   moveDown();
+  // }
+}
+function moveUp() {
+  console.log("Mover hacia arriba");
+}
+function moveLeft() {
+  console.log("Mover hacia la izquierda");
+}
+function moveRight() {
+  console.log("Mover hacia la derecha");
+}
+function moveDown() {
+  console.log("Mover hacia abajo");
 }
 
 /*
