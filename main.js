@@ -9,6 +9,12 @@ const btnDown = document.querySelector("#down");
 let canvasSize;
 let elementsSize;
 
+//Variable sera iguala un objeto con 2posiciones
+const playerPosition = {
+  x: undefined,
+  y: undefined,
+};
+
 //Escuchar eventos del navegador. Ejecuto la funcion cada vez que cargue el HTML o se haga resize en el navegador
 window.addEventListener("load", setCanvasSize);
 window.addEventListener("resize", setCanvasSize);
@@ -59,10 +65,19 @@ function startGame() {
       //Calculo la coordenada en x,y => LA posicion en x sera(multiplicar el tamaño que debe tener nuestros elementos * indice(rowi) + 1.)
       const posX = elementsSize * (rowI + 1);
       const posY = elementsSize * (colI + 1);
+
+      //Si la columna es una O entonces:
+      if (col == "O") {
+        // console.log("Aqui debe ir el jugador");
+        //playerPosition obtiene las coordenadas cuando la col sea 'O'(emoji puerta)
+        playerPosition.x = posX;
+        playerPosition.y = posY;
+        console.log({ playerPosition });
+      }
+
       //Le asigno a la funcion para renderizar cualquier mapa segun las posiciones, segun el array maps.
       game.fillText(emoji, posX, posY);
       // console.log(emojis[col]);
-      // console.log({ row, col });
       // console.log({ row, rowI, col, colI });
     });
   });
@@ -88,6 +103,13 @@ function startGame() {
   game.fillStyle = "purple";
   game.textAlign = "start";
   game.fillText("VideoGame", 10, 30);*/
+
+  movePlayer();
+}
+
+function movePlayer() {
+  //Se hace el fillText del game en la posicion que diga la variable playerPosition
+  game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y);
 }
 
 window.addEventListener("keydown", moveByKeys);
@@ -127,6 +149,9 @@ function moveUp() {
 }
 function moveLeft() {
   console.log("Mover hacia la izquierda");
+  //Le resto el elementsize al playerPosition para mover el emoji jugador a la izquierda
+  playerPosition.x -= elementsSize;
+  movePlayer();
 }
 function moveRight() {
   console.log("Mover hacia la derecha");
