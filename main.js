@@ -56,6 +56,9 @@ function startGame() {
   const mapRowCols = mapRows.map((row) => row.trim().split(""));
   console.log({ map, mapRows, mapRowCols });
 
+  //Borrar la repeticion desde la posicion 0,0 hasta el canvassize
+  game.clearRect(0, 0, canvasSize, canvasSize);
+
   //minimizo el codigo de for a un forEach. -> Este metodo permite saber cual es el elemento que estoy recorriendo y saber su indice
   //recibe dos parametros(fila[array de columnas], indice de cada fila) y asi mismo con (col,colI)
   mapRowCols.forEach((row, rowI) => {
@@ -68,11 +71,14 @@ function startGame() {
 
       //Si la columna es una O entonces:
       if (col == "O") {
-        // console.log("Aqui debe ir el jugador");
         //playerPosition obtiene las coordenadas cuando la col sea 'O'(emoji puerta)
-        playerPosition.x = posX;
-        playerPosition.y = posY;
-        console.log({ playerPosition });
+
+        //Si ninguno de estos elementos tiene algun numero por dentro(si es undefined):
+        if (!playerPosition.x && !playerPosition.y) {
+          playerPosition.x = posX;
+          playerPosition.y = posY;
+          console.log({ playerPosition });
+        }
       }
 
       //Le asigno a la funcion para renderizar cualquier mapa segun las posiciones, segun el array maps.
@@ -146,18 +152,24 @@ function moveByKeys(event) {
 }
 function moveUp() {
   console.log("Mover hacia arriba");
+  playerPosition.y -= elementsSize;
+  startGame();
 }
 function moveLeft() {
   console.log("Mover hacia la izquierda");
   //Le resto el elementsize al playerPosition para mover el emoji jugador a la izquierda
   playerPosition.x -= elementsSize;
-  movePlayer();
+  startGame();
 }
 function moveRight() {
   console.log("Mover hacia la derecha");
+  playerPosition.x += elementsSize;
+  startGame();
 }
 function moveDown() {
   console.log("Mover hacia abajo");
+  playerPosition.y += elementsSize;
+  startGame();
 }
 
 /*
