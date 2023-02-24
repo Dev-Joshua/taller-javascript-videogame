@@ -152,24 +152,44 @@ function moveByKeys(event) {
 }
 function moveUp() {
   console.log("Mover hacia arriba");
-  playerPosition.y -= elementsSize;
-  startGame();
+  //Si mi elementSize llega a ser mayor a lo que estemos asignando para el movimiento de player deberia dar OUT
+  if (playerPosition.y - elementsSize < elementsSize) {
+    console.log("OUT");
+  } else {
+    playerPosition.y -= elementsSize;
+    startGame();
+  }
 }
 function moveLeft() {
   console.log("Mover hacia la izquierda");
-  //Le resto el elementsize al playerPosition para mover el emoji jugador a la izquierda
-  playerPosition.x -= elementsSize;
-  startGame();
+
+  if (playerPosition.x - elementsSize < elementsSize) {
+    console.log("OUT");
+  } else {
+    //Le resto el elementsize al playerPosition para mover el emoji jugador a la izquierda
+    playerPosition.x -= elementsSize;
+    startGame();
+  }
 }
 function moveRight() {
   console.log("Mover hacia la derecha");
-  playerPosition.x += elementsSize;
-  startGame();
+
+  if (playerPosition.x + elementsSize > canvasSize) {
+    console.log("OUT");
+  } else {
+    playerPosition.x += elementsSize;
+    startGame();
+  }
 }
 function moveDown() {
   console.log("Mover hacia abajo");
-  playerPosition.y += elementsSize;
-  startGame();
+
+  if (playerPosition.y + elementsSize > canvasSize) {
+    console.log("OUT");
+  } else {
+    playerPosition.y += elementsSize;
+    startGame();
+  }
 }
 
 /*
