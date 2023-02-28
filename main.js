@@ -9,6 +9,7 @@ const btnDown = document.querySelector("#down");
 let canvasSize;
 let elementsSize;
 let level = 0;
+let lives = 3;
 
 //Variable sera iguala un objeto con 2posiciones
 const playerPosition = {
@@ -166,7 +167,7 @@ function movePlayer() {
   });
 
   if (obstacleCollision) {
-    console.log("Chocaste contra una bomba!");
+    levelFail();
   }
   //Se hace el fillText del game en la posicion que diga la variable playerPosition
   game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y);
@@ -176,6 +177,23 @@ function movePlayer() {
 function levelWin() {
   console.log("Subiste de nivel");
   level++;
+  startGame();
+}
+
+//Cuando haya colision con una bomba el jugador habra perdido.
+//Entonces se deja la posicion de player en undefined y se vuelve a ejecutar startGame() para reiniciar el juego
+function levelFail() {
+  console.log("Chocaste contra una bomba!");
+  lives--;
+
+  console.log(lives);
+  if (lives <= 0) {
+    level = 0;
+    lives = 3;
+  }
+
+  playerPosition.x = undefined;
+  playerPosition.y = undefined;
   startGame();
 }
 
