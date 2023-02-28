@@ -15,20 +15,31 @@ const playerPosition = {
   y: undefined,
 };
 
+const giftPosition = {
+  x: undefined,
+  y: undefined,
+};
+
 //Escuchar eventos del navegador. Ejecuto la funcion cada vez que cargue el HTML o se haga resize en el navegador
 window.addEventListener("load", setCanvasSize);
 window.addEventListener("resize", setCanvasSize);
+
+function fixNumber(n) {
+  return Number(n.toFixed(2));
+}
 
 //Funcion q se encarga de hacer el resize(ajustar el canvas para tamaño desktop y mobile)
 function setCanvasSize() {
   //Pregunto si la altura es mayor que el ancho(width). Aqui se define el canvasSize
   if (window.innerHeight > window.innerWidth) {
     //canvaSize sera igual al widt. Agarro el 80% de su ancho(window)
-    canvasSize = window.innerWidth * 0.6;
+    canvasSize = window.innerWidth * 0.7;
   } else {
     //Si el ancho es mayor que la altura agarro el 80% de height(window)
-    canvasSize = window.innerHeight * 0.6;
+    canvasSize = window.innerHeight * 0.7;
   }
+
+  canvasSize = Number(canvasSize.toFixed(0));
 
   //Le asigno su atributo width a canvas diciendole que sea lo equivalente al canvasSize
   canvas.setAttribute("width", canvasSize);
@@ -36,6 +47,9 @@ function setCanvasSize() {
 
   //Como tenemos una grilla 10x10 dividimos el tamaño del canvasSize en 10
   elementsSize = canvasSize / 10;
+
+  playerPosition.x = undefined;
+  playerPosition.y = undefined;
 
   //Una vez se defina el canvas llamo la funcion
   startGame();
@@ -49,7 +63,7 @@ function startGame() {
   game.font = elementsSize + "px Verdana";
   game.textAlign = "end";
 
-  const map = maps[0];
+  const map = maps[1];
   //Creo un array de filas(donde el inicio y el final de c/elemento es cuando haya un salto de linea), selecciono el mapa le quito los espacios en blanco .trim(limpiar string)
   const mapRows = map.trim().split("\n");
   //Creo un array a partir de otro array(bidimensional). Cada fila va a ser otro array donde c/elemento son las distintas columnas
@@ -69,7 +83,7 @@ function startGame() {
       const posX = elementsSize * (rowI + 1);
       const posY = elementsSize * (colI + 1);
 
-      //Si la columna es una O entonces:
+      //Si la columna es igual a una O entonces:
       if (col == "O") {
         //playerPosition obtiene las coordenadas cuando la col sea 'O'(emoji puerta)
 
@@ -79,6 +93,10 @@ function startGame() {
           playerPosition.y = posY;
           console.log({ playerPosition });
         }
+        //Si la columna es igual a una I esta en el regalo y pasa de nivel
+      } else if (col == "I") {
+        giftPosition.x = posX;
+        giftPosition.y = posY;
       }
 
       //Le asigno a la funcion para renderizar cualquier mapa segun las posiciones, segun el array maps.
@@ -114,6 +132,19 @@ function startGame() {
 }
 
 function movePlayer() {
+  //Reduzco los decimales a 2 para que coincida correctamente x y y para la colision
+  playerPosition.x = fixNumber(playerPosition.x);
+  playerPosition.y = fixNumber(playerPosition.y);
+
+  const giftCollisionX = playerPosition.x == giftPosition.x;
+  const giftColisionY = playerPosition.y == giftPosition.y;
+  const giftColision = giftCollisionX && giftColisionY;
+
+  //Hubo colision con el emoji regalo?
+  if (giftColision) {
+    console.log("Subes de nivel!");
+  }
+
   //Se hace el fillText del game en la posicion que diga la variable playerPosition
   game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y);
 }
@@ -152,6 +183,7 @@ function moveByKeys(event) {
 }
 function moveUp() {
   console.log("Mover hacia arriba");
+  //Si playerPosition.y es menor que elementSize(el tope al que podemos llegar)
   //Si mi elementSize llega a ser mayor a lo que estemos asignando para el movimiento de player deberia dar OUT
   if (playerPosition.y - elementsSize < elementsSize) {
     console.log("OUT");
