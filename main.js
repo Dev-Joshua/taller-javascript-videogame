@@ -8,6 +8,7 @@ const btnDown = document.querySelector("#down");
 
 let canvasSize;
 let elementsSize;
+let level = 0;
 
 //Variable sera iguala un objeto con 2posiciones
 const playerPosition = {
@@ -67,7 +68,14 @@ function startGame() {
   game.font = elementsSize + "px Verdana";
   game.textAlign = "end";
 
-  const map = maps[0];
+  const map = maps[level];
+  //Si no hay ningun mapa dentro del array maps se termina la ejecucion aqui
+  //si ya no hay mas niveles para no volver hacer render del mapa hago return en esta funcion
+  if (!map) {
+    gameWin();
+    return;
+  }
+
   //Creo un array de filas(donde el inicio y el final de c/elemento es cuando haya un salto de linea), selecciono el mapa le quito los espacios en blanco .trim(limpiar string)
   const mapRows = map.trim().split("\n");
   //Creo un array a partir de otro array(bidimensional). Cada fila va a ser otro array donde c/elemento son las distintas columnas
@@ -146,7 +154,7 @@ function movePlayer() {
 
   //Hubo colision con el emoji regalo?
   if (giftColision) {
-    console.log("Subes de nivel!");
+    levelWin();
   }
 
   //Validacion para que avisar que el jugador hizo colision con la bomba
@@ -162,6 +170,17 @@ function movePlayer() {
   }
   //Se hace el fillText del game en la posicion que diga la variable playerPosition
   game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y);
+}
+
+//Mediante esta funcion sube de nivel por lo tanto cambia de mapa en maps.js
+function levelWin() {
+  console.log("Subiste de nivel");
+  level++;
+  startGame();
+}
+
+function gameWin() {
+  console.log("Terminaste el juego!");
 }
 
 window.addEventListener("keydown", moveByKeys);
