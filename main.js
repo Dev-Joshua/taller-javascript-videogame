@@ -15,10 +15,14 @@ const playerPosition = {
   y: undefined,
 };
 
+//variable para colisiones fijas(emoji regalo)
 const giftPosition = {
   x: undefined,
   y: undefined,
 };
+
+//variable para colisiones con arrays(emoji bomba)
+let obstacleBombs = [];
 
 //Escuchar eventos del navegador. Ejecuto la funcion cada vez que cargue el HTML o se haga resize en el navegador
 window.addEventListener("load", setCanvasSize);
@@ -55,7 +59,7 @@ function setCanvasSize() {
   startGame();
 }
 
-//Funcion para renderizar el mapa  y el jugador con fillText x toda la grilla
+//Funcion para renderizar el mapa  y el jugador con fillText x toda la grilla cada vez que se mueva el jugador(se renderiazara el mapa)
 function startGame() {
   console.log({ canvasSize, elementsSize });
 
@@ -63,14 +67,15 @@ function startGame() {
   game.font = elementsSize + "px Verdana";
   game.textAlign = "end";
 
-  const map = maps[1];
+  const map = maps[0];
   //Creo un array de filas(donde el inicio y el final de c/elemento es cuando haya un salto de linea), selecciono el mapa le quito los espacios en blanco .trim(limpiar string)
   const mapRows = map.trim().split("\n");
   //Creo un array a partir de otro array(bidimensional). Cada fila va a ser otro array donde c/elemento son las distintas columnas
   const mapRowCols = mapRows.map((row) => row.trim().split(""));
   console.log({ map, mapRows, mapRowCols });
 
-  //Borrar la repeticion desde la posicion 0,0 hasta el canvassize
+  //Borrar las repeticionesen todas las posiciones de todo lo que tenga en canvas y limpiar el array
+  obstacleBombs = [];
   game.clearRect(0, 0, canvasSize, canvasSize);
 
   //minimizo el codigo de for a un forEach. -> Este metodo permite saber cual es el elemento que estoy recorriendo y saber su indice
@@ -86,7 +91,6 @@ function startGame() {
       //Si la columna es igual a una O entonces:
       if (col == "O") {
         //playerPosition obtiene las coordenadas cuando la col sea 'O'(emoji puerta)
-
         //Si ninguno de estos elementos tiene algun numero por dentro(si es undefined):
         if (!playerPosition.x && !playerPosition.y) {
           playerPosition.x = posX;
@@ -97,6 +101,11 @@ function startGame() {
       } else if (col == "I") {
         giftPosition.x = posX;
         giftPosition.y = posY;
+      } else if (col == "X") {
+        obstacleBombs.push({
+          x: posX,
+          y: posY,
+        });
       }
 
       //Le asigno a la funcion para renderizar cualquier mapa segun las posiciones, segun el array maps.
@@ -111,7 +120,6 @@ function startGame() {
   //   // console.log(i);
   //   for (let j = 1; j <= 10; j++) {
   //     //En cada iteracion renderizamos los elementos llenando el mapa
-
   //     // game.fillText(mapRowCols[i][j], elementsSize * i, elementsSize * j);
   //     //Le enviamos el mapRowCols al objeto de emojis para que tome el elemento que concuerde con estas ubicaciones(i,j-> row,col)
   //     game.fillText(
@@ -122,11 +130,6 @@ function startGame() {
   //     // console.log(j);
   //   }
   // }
-  /*
-  game.font = "14px Verdana";
-  game.fillStyle = "purple";
-  game.textAlign = "start";
-  game.fillText("VideoGame", 10, 30);*/
 
   movePlayer();
 }
@@ -138,6 +141,7 @@ function movePlayer() {
 
   const giftCollisionX = playerPosition.x == giftPosition.x;
   const giftColisionY = playerPosition.y == giftPosition.y;
+  //Si coincide la coordenada entre playerposition.x y giftposition.x(asi mismo y) entonces hay colision
   const giftColision = giftCollisionX && giftColisionY;
 
   //Hubo colision con el emoji regalo?
@@ -145,6 +149,17 @@ function movePlayer() {
     console.log("Subes de nivel!");
   }
 
+  //Validacion para que avisar que el jugador hizo colision con la bomba
+  const obstacleCollision = obstacleBombs.find((obstacle) => {
+    const obstacleCollisionX = obstacle.x == playerPosition.x;
+    const obstacleCollisionY = obstacle.y == playerPosition.y;
+    // Devuelve true si ambos son true etnonces hay colision
+    return obstacleCollisionX && obstacleCollisionY;
+  });
+
+  if (obstacleCollision) {
+    console.log("Chocaste contra una bomba!");
+  }
   //Se hace el fillText del game en la posicion que diga la variable playerPosition
   game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y);
 }
