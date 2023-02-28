@@ -5,6 +5,7 @@ const btnUp = document.querySelector("#up");
 const btnLeft = document.querySelector("#left");
 const btnRight = document.querySelector("#right");
 const btnDown = document.querySelector("#down");
+const spanLives = document.querySelector("#lives");
 
 let canvasSize;
 let elementsSize;
@@ -82,6 +83,8 @@ function startGame() {
   //Creo un array a partir de otro array(bidimensional). Cada fila va a ser otro array donde c/elemento son las distintas columnas
   const mapRowCols = mapRows.map((row) => row.trim().split(""));
   console.log({ map, mapRows, mapRowCols });
+
+  showLives();
 
   //Borrar las repeticionesen todas las posiciones de todo lo que tenga en canvas y limpiar el array
   obstacleBombs = [];
@@ -180,7 +183,7 @@ function levelWin() {
   startGame();
 }
 
-//Cuando haya colision con una bomba el jugador habra perdido.
+//Cuando haya colision con una bomba el jugador habra perdido una vida
 //Entonces se deja la posicion de player en undefined y se vuelve a ejecutar startGame() para reiniciar el juego
 function levelFail() {
   console.log("Chocaste contra una bomba!");
@@ -199,6 +202,17 @@ function levelFail() {
 
 function gameWin() {
   console.log("Terminaste el juego!");
+}
+
+//funcion para mostrar cuantas vidas le quedan al jugador. Creo un array con las vidas para usar el metodo .fill para insertar un corazon por cada posicion del array[3]
+function showLives() {
+  const heartsArray = Array(lives).fill(emojis["HEART"]); // [1,2,3,]
+  console.log(heartsArray);
+
+  //Por fuera del forEach llamo a spanLives para limpiarlo(sea un nuevo string vacio)
+  spanLives.innerHTML = "";
+  //Recorro el array lives y xC/uno llamo a spanLives y usando el metodo .appen insertarle el corazon
+  heartsArray.forEach((heart) => spanLives.append(heart));
 }
 
 window.addEventListener("keydown", moveByKeys);
