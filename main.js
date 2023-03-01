@@ -6,11 +6,16 @@ const btnLeft = document.querySelector("#left");
 const btnRight = document.querySelector("#right");
 const btnDown = document.querySelector("#down");
 const spanLives = document.querySelector("#lives");
+const spanTime = document.querySelector("#time");
 
 let canvasSize;
 let elementsSize;
 let level = 0;
 let lives = 3;
+
+let timeStart;
+let timePlayer;
+let timeInterval;
 
 //Variable sera iguala un objeto con 2posiciones
 const playerPosition = {
@@ -76,6 +81,12 @@ function startGame() {
   if (!map) {
     gameWin();
     return;
+  }
+
+  //Si timestart no tiene algun valor entonces se lo voy a asignar
+  if (!timeStart) {
+    timeStart = Date.now();
+    timeInterval = setInterval(showTime, 100);
   }
 
   //Creo un array de filas(donde el inicio y el final de c/elemento es cuando haya un salto de linea), selecciono el mapa le quito los espacios en blanco .trim(limpiar string)
@@ -190,9 +201,11 @@ function levelFail() {
   lives--;
 
   console.log(lives);
+  //Si perdemos las vidas, iniciamos el nivel en 0, reiniciamos las vidas a 3 y le asignamos undefined a timeStart
   if (lives <= 0) {
     level = 0;
     lives = 3;
+    timeStart = undefined;
   }
 
   playerPosition.x = undefined;
@@ -202,6 +215,26 @@ function levelFail() {
 
 function gameWin() {
   console.log("Terminaste el juego!");
+  //mato el intervalo de timeInterval cada vez que se llegue al final del juego
+  clearInterval(timeInterval);
+
+  const recordTime = localStorage.getItem("record_time");
+  const playerTime = Date.now() - timeStart;
+  //Se evalua primero si el recordTime existe, y si ese record fue superado
+  if (recordTime) {
+    if (recordTime >= playerTime) {
+      localStorage.setItem("record_time", playerTime);
+      console.log("Superaste el record impuesto");
+    } else {
+      console.log("No pudiste superar el recordn, intentalo de nuevo");
+    }
+    //Si es la primera vez del jugador(gano y no hay ningun record guardado en localStorage)
+  } else {
+    //Se guardara el record
+    localStorage.setItem("record_time", playerTime);
+    console.log("Es tu primer record");
+  }
+  console.log({ recordTime, playerTime });
 }
 
 //funcion para mostrar cuantas vidas le quedan al jugador. Creo un array con las vidas para usar el metodo .fill para insertar un corazon por cada posicion del array[3]
@@ -213,6 +246,11 @@ function showLives() {
   spanLives.innerHTML = "";
   //Recorro el array lives y xC/uno llamo a spanLives y usando el metodo .appen insertarle el corazon
   heartsArray.forEach((heart) => spanLives.append(heart));
+}
+
+//Mostrar al jugador mediante el html el tiempo jugado por partida
+function showTime() {
+  spanTime.innerHTML = Date.now() - timeStart;
 }
 
 window.addEventListener("keydown", moveByKeys);
