@@ -9,6 +9,7 @@ const spanLives = document.querySelector("#lives");
 const spanTime = document.querySelector("#time");
 const spanRecord = document.querySelector("#record");
 const pResult = document.querySelector("#result");
+const btnReset = document.querySelector("#reset_button");
 
 let canvasSize;
 let elementsSize;
@@ -264,6 +265,8 @@ function showRecord() {
 }
 
 window.addEventListener("keydown", moveByKeys);
+
+btnReset.addEventListener("click", reiniciarJuego);
 btnUp.addEventListener("click", moveUp);
 btnLeft.addEventListener("click", moveLeft);
 btnRight.addEventListener("click", moveRight);
@@ -336,6 +339,9 @@ function moveDown() {
     playerPosition.y += elementsSize;
     startGame();
   }
+}
+function reiniciarJuego() {
+  location.reload();
 }
 
 /*
