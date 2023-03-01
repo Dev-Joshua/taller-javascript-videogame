@@ -60,8 +60,9 @@ function setCanvasSize() {
   canvas.setAttribute("height", canvasSize);
 
   //Como tenemos una grilla 10x10 dividimos el tamaño del canvasSize en 10
-  elementsSize = canvasSize / 10;
+  elementsSize = fixNumber(canvasSize / 10);
 
+  //Cuando se haga resize la calavera tendra el valor de undefined y vovlera a su posicion inical
   playerPosition.x = undefined;
   playerPosition.y = undefined;
 
@@ -164,6 +165,8 @@ function movePlayer() {
   //Reduzco los decimales a 2 para que coincida correctamente x y y para la colision
   playerPosition.x = fixNumber(playerPosition.x);
   playerPosition.y = fixNumber(playerPosition.y);
+  giftPosition.x = fixNumber(giftPosition.x);
+  giftPosition.y = fixNumber(giftPosition.y);
 
   const giftCollisionX = playerPosition.x == giftPosition.x;
   const giftColisionY = playerPosition.y == giftPosition.y;
@@ -177,8 +180,8 @@ function movePlayer() {
 
   //Validacion para que avisar que el jugador hizo colision con la bomba
   const obstacleCollision = obstacleBombs.find((obstacle) => {
-    const obstacleCollisionX = obstacle.x == playerPosition.x;
-    const obstacleCollisionY = obstacle.y == playerPosition.y;
+    const obstacleCollisionX = fixNumber(obstacle.x) == playerPosition.x;
+    const obstacleCollisionY = fixNumber(obstacle.y) == playerPosition.y;
     // Devuelve true si ambos son true etnonces hay colision
     return obstacleCollisionX && obstacleCollisionY;
   });

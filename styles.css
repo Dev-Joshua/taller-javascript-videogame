@@ -48,17 +48,21 @@ button:not(:last-child) {
   margin: 0 auto;
   width: 80%;
   max-width: 460px;
+  background-color: black;
 }
 
 p {
-  display: block;
+  gap: 20px;
+  display: flex;
   margin: 0;
   width: 100%;
+  text-align: center;
+  justify-content: center;
 }
 
 @media (max-width: 440px) {
   button {
-    margin-top: 25px;
+    margin-top: 5px;
   }
   #up,
   #down {
