@@ -7,6 +7,8 @@ const btnRight = document.querySelector("#right");
 const btnDown = document.querySelector("#down");
 const spanLives = document.querySelector("#lives");
 const spanTime = document.querySelector("#time");
+const spanRecord = document.querySelector("#record");
+const pResult = document.querySelector("#result");
 
 let canvasSize;
 let elementsSize;
@@ -87,6 +89,7 @@ function startGame() {
   if (!timeStart) {
     timeStart = Date.now();
     timeInterval = setInterval(showTime, 100);
+    showRecord();
   }
 
   //Creo un array de filas(donde el inicio y el final de c/elemento es cuando haya un salto de linea), selecciono el mapa le quito los espacios en blanco .trim(limpiar string)
@@ -224,15 +227,15 @@ function gameWin() {
   if (recordTime) {
     if (recordTime >= playerTime) {
       localStorage.setItem("record_time", playerTime);
-      console.log("Superaste el record impuesto");
+      pResult.innerHTML = "Superaste el record impuesto";
     } else {
-      console.log("No pudiste superar el recordn, intentalo de nuevo");
+      pResult.innerHTML = "No pudiste superar el recordn, intentalo de nuevo";
     }
     //Si es la primera vez del jugador(gano y no hay ningun record guardado en localStorage)
   } else {
     //Se guardara el record
     localStorage.setItem("record_time", playerTime);
-    console.log("Es tu primer record");
+    pResult.innerHTML = "Es tu primer record";
   }
   console.log({ recordTime, playerTime });
 }
@@ -251,6 +254,10 @@ function showLives() {
 //Mostrar al jugador mediante el html el tiempo jugado por partida
 function showTime() {
   spanTime.innerHTML = Date.now() - timeStart;
+}
+
+function showRecord() {
+  spanRecord.innerHTML = localStorage.getItem("record_time");
 }
 
 window.addEventListener("keydown", moveByKeys);
